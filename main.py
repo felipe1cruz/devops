@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from datetime import datetime
 
+import requests
 
 LISTA_TAREFAS = []
 APP = FastAPI()
@@ -70,26 +71,39 @@ def incluir_tarefa(id: int, titulo: str, descricao: str):
 def atualizar_tarefa(id: int, titulo: str = "", descricao: str = "", concluido: bool = False):
     global LISTA_TAREFAS
 
+    # 1. Verifica se a tarefa existe
     tarefa_existe = verificar_existencia_tarefa(id)
-
     if not tarefa_existe:
         return {"mensagem": "TAREFA NÃO EXISTE!"}
     
-    tarefa = None
-    for indice in range(len(LISTA_TAREFAS)):
-        tarefa = LISTA_TAREFAS[indice]
-
-        # Sai do loop
+    # 2. Busca o índice real da tarefa
+    indice_alvo = -1
+    for indice, tarefa in enumerate(LISTA_TAREFAS):
         if tarefa['id'] == id:
+            indice_alvo = indice
             break
     
+    # 3. Atualiza os dados se eles foram enviados
     if titulo != "":
-        LISTA_TAREFAS[indice]['titulo'] = titulo
+        LISTA_TAREFAS[indice_alvo]['titulo'] = titulo
     
-    if descricao !=  "": 
-        LISTA_TAREFAS[indice]['descricao'] = descricao
-    
-    LISTA_TAREFAS[indice]['concluido'] = concluido
+    if descricao != "": 
+        LISTA_TAREFAS[indice_alvo]['descricao'] = descricao
+   
+    LISTA_TAREFAS[indice_alvo]['concluido'] = concluido
+
+    # 4. Dispara a notificação se foi concluída
+    if concluido == True:
+        print("DEBUG: Entrou no IF! Disparando requisição para a notificação...")
+        
+        # Usando 127.0.0.1 é mais seguro que localhost para evitar o Erro 404 falso
+        requests.post(
+            "http://127.0.0.1:8000/notificar", 
+            params={
+                "titulo": LISTA_TAREFAS[indice_alvo]['titulo'], 
+                "data_finalizacao": str(datetime.now())
+            }
+        )
 
     return {"mensagem": "OK"}
 
