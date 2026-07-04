@@ -36,3 +36,13 @@ def test_criar_tarefa_ja_existente():
     assert requisicao.status_code == 200
     assert requisicao.json() == {"mensagem": "TAREFA JÁ EXISTE"}
 
+def test_remover_tarefa():
+    criar_tarefa_mock()
+
+    requisicao = CLIENT.delete("/tarefas/0")
+    assert requisicao.status_code == 200
+    assert requisicao.json() == {"mensagem": "OK"}
+
+    requisicao = CLIENT.delete("/tarefas/10")
+    assert requisicao.status_code == 200
+    assert requisicao.json() == {"mensagem": "TAREFA NÃO EXISTE"}

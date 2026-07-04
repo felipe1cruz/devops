@@ -92,8 +92,12 @@ def atualizar_tarefa(id: int, titulo: str = "", descricao: str = "", concluido: 
     
     if concluido == True:
         requests.post(
-            f"http://localhost:8002/notificar?titulo={tarefa['titulo']}&data_finalizacao={datetime.now()}",
-            timeout=10
+            "http://127.0.0.1:8000/notificar", 
+            params={
+                "titulo": LISTA_TAREFAS[indice_alvo]['titulo'], 
+                "data_finalizacao": str(datetime.now())
+            },
+            timeout=10  # <-- ADICIONE ESTA LINHA
         )
         
         # Usando 127.0.0.1 é mais seguro que localhost para evitar o Erro 404 falso
