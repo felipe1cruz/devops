@@ -87,14 +87,14 @@ def atualizar_tarefa(id: int, titulo: str = "", descricao: str = "", concluido: 
     if titulo != "":
         LISTA_TAREFAS[indice_alvo]['titulo'] = titulo
     
-    if descricao != "": 
-        LISTA_TAREFAS[indice_alvo]['descricao'] = descricao
-   
-    LISTA_TAREFAS[indice_alvo]['concluido'] = concluido
-
-    # 4. Dispara a notificação se foi concluída
+    if descricao !=  "":
+        LISTA_TAREFAS[indice]['descricao'] = descricao
+    
     if concluido == True:
-        print("DEBUG: Entrou no IF! Disparando requisição para a notificação...")
+        requests.post(
+            f"http://localhost:8002/notificar?titulo={tarefa['titulo']}&data_finalizacao={datetime.now()}",
+            timeout=10
+        )
         
         # Usando 127.0.0.1 é mais seguro que localhost para evitar o Erro 404 falso
         requests.post(
