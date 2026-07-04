@@ -6,10 +6,11 @@ WORKDIR app/
 
 COPY requirements.txt .
 COPY app/main.py .
+COPY app/notificacao.py .
 
 RUN pip install -r requirements.txt
 
-CMD ["fastapi", "run"]
+ENTRYPOINT ["fastapi", "run"]
 
 # 1. Construir imagem Docker (docker build)
 # 2. Executar contêiner com base na imagem (mapear porta 8000 do container para 80 do host)
