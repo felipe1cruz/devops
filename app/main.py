@@ -156,3 +156,19 @@ def apagar_tarefa(id: int):
     LISTA_TAREFAS.pop(indice)
 
     return {"mensagem": "OK"}
+
+@APP.get("/metricas")
+def obter_metricas():
+    metricas = {
+        "quantidade_tarefas": len(LISTA_TAREFAS),
+        "tarefas_finalizadas": 0,
+        "tarefas_pendentes": 0
+    }
+
+    for tarefa in LISTA_TAREFAS:
+        if tarefa["concluido"]:
+            metricas["tarefas_finalizadas"] += 1
+        else:
+            metricas["tarefas_pendentes"] += 1
+
+    return metricas
