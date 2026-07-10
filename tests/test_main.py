@@ -90,4 +90,13 @@ def test_metricas():
         "tarefas_finalizadas": 0,
         "tarefas_pendentes": 1
     }
+
+def test_health():
+    requisicao = CLIENT.get("/health")
+    
+    # 1.1 Retornar status_code 200
+    assert requisicao.status_code == 200
+    
+    # 1.2 Retornar {"status": "OK"}
+    assert requisicao.json() == {"status": "OK"}
     

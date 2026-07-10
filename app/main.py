@@ -172,3 +172,7 @@ def obter_metricas():
             metricas["tarefas_pendentes"] += 1
 
     return metricas
+
+@APP.get("/health")
+def get_health():
+    return {"status": "OK"}
