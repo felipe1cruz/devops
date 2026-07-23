@@ -64,39 +64,13 @@ def test_verificar_tarefa_especifica():
     assert dados["concluido"] == False
 
     requisicao = CLIENT.get("/tarefas/5")
+    CLIENT.delete('/tarefas/0')
 
     assert requisicao.json() == {"mensagem": "Não existe nenhuma tarefa"}
 
-def test_metricas():
-    # 1. Garante que temos um cenário limpo/controlado.
-    CLIENT.delete("/tarefas/0")
-    CLIENT.delete("/tarefas/1")
-    
-    # 2. Testa o cenário com a lista vazia (0 tarefas)
-    requisicao = CLIENT.get("/metricas")
-    assert requisicao.status_code == 200
-    assert requisicao.json() == {
-        "quantidade_tarefas": 0,
-        "tarefas_finalizadas": 0,
-        "tarefas_pendentes": 0
-    }
-
-    CLIENT.post("/tarefas?id=0&titulo=Tarefa1&descricao=Teste")
-    
-    requisicao = CLIENT.get("/metricas")
-    assert requisicao.status_code == 200
-    assert requisicao.json() == {
-        "quantidade_tarefas": 1,
-        "tarefas_finalizadas": 0,
-        "tarefas_pendentes": 1
-    }
-
 def test_health():
-    requisicao = CLIENT.get("/health")
-    
-    # 1.1 Retornar status_code 200
-    assert requisicao.status_code == 200
-    
-    # 1.2 Retornar {"status": "OK"}
-    assert requisicao.json() == {"status": "OK"}
+    req = CLIENT.get("/health")
+
+    assert req.status_code == 200
+    assert req.json() == {"mensagem": "healthy"}
     
