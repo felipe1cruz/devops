@@ -1,6 +1,9 @@
 name: 'Pipeline 04/07/26'
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches: 
       - main
